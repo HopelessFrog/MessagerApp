@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Messager.Pages.LoginPage"
+             xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
+             Title="LoginPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+
+        </Grid.RowDefinitions>
+        <Frame
+         BackgroundColor="Transparent " 
+         CornerRadius="30"
+         
+         Margin="30"
+         HorizontalOptions="FillAndExpand"
+         VerticalOptions="FillAndExpand">
+            <Image 
+             Source="login_image.svg"
+             HeightRequest="185"
+             Aspect="AspectFit"
+             SemanticProperties.Description="dot net bot in a race car number eight" />
+        </Frame>
+
+        <StackLayout Grid.Row="1" Orientation="Vertical">
+
+            <Frame Margin="10,25,10,0"   BorderColor="#512BD4" HorizontalOptions="FillAndExpand" CornerRadius="30" Padding="0">
+                <StackLayout Orientation="Horizontal">
+                    <Frame BorderColor="#512BD4"  Padding="0" WidthRequest="40"
+                        HeightRequest="40" CornerRadius="30" Margin="5">
+                        <Image Source="user.svg" MaximumWidthRequest="30" MaximumHeightRequest="30" Aspect="AspectFit"
+                            HorizontalOptions="Fill" />
+                    </Frame>
+
+                    <Entry  Text="{Binding UserName}" FontSize="25" Placeholder="Login" VerticalOptions="Center" HorizontalOptions="FillAndExpand" Margin="0,0,30,0" />
+                </StackLayout>
+            </Frame>
+
+            <Frame Margin="10,25,10,0"  BorderColor="#512BD4" HorizontalOptions="Fill" CornerRadius="30" Padding="0" >
+                <StackLayout Orientation="Horizontal">
+                    <Frame BorderColor="#512BD4"  Padding="0" WidthRequest="40"
+                        HeightRequest="40" CornerRadius="30" Margin="5">
+                        <Image Source="password.svg" MaximumWidthRequest="30" MaximumHeightRequest="30" Aspect="AspectFit"
+                            HorizontalOptions="FillAndExpand" />
+                    </Frame>
+
+                    <Entry Text="{Binding Password}" FontSize="25" IsPassword="True" Placeholder="Password" VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand" Margin="0,0,30,0"/>
+                </StackLayout>
+            </Frame>
+            <StackLayout Orientation="Horizontal" Margin="10" Padding="0">
+                <mdc:Switch IsSelected="False"/>
+                <Label Text="Remember me " FontSize="Small"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            </StackLayout>
+
+
+        </StackLayout>
+
+        <StackLayout Grid.Row="2">
+            <mdc:Button Command="{Binding LoginCommand}"  Margin="15" FontSize="30" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" Text="Login" Style="{DynamicResource FilledButtonStyle}" />
+            <Label Margin="20,0,0,0" Text="Sign Up" TextColor="Green" FontAttributes="Bold" FontSize="Small"/>
+        </StackLayout>
+
+    </Grid>
+</ContentPage>
