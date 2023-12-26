@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
+xmlns:toolkit ="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+
+             x:Class="Messager.Pages.PopUps.NoInternetPopUp">
+    <VerticalStackLayout Padding="30">
+        <Label 
+            Text="NO INTERNET CONNECTION"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Frame
+            BackgroundColor="Transparent "
+            CornerRadius="30"
+
+            Margin="30"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Image
+                Source="no_internet.svg"
+                HeightRequest="185"
+                Aspect="AspectFit" />
+        </Frame>
+
+        <mdc:Button
+            Text="OK"
+            Clicked="Button_OnClicked"/>
+    </VerticalStackLayout>
+</toolkit:Popup>

@@ -1,10 +1,17 @@
-﻿namespace Messager
+﻿using Messager.Pages;
+
+namespace Messager
 {
     public partial class AppShell : Shell
     {
-        public AppShell()
+        public AppShell(LoginPage loginPage)
         {
             InitializeComponent();
+            Routing.RegisterRoute(nameof(LoginPage)+"/" + nameof(RegisterPage), typeof(RegisterPage));
+            Routing.RegisterRoute("ListChatPage", typeof(ListChatPage));
+            Routing.RegisterRoute("ChatPage", typeof(ChatPage));
+
+            this.CurrentItem = loginPage;
         }
     }
 }

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Messager.Pages.RegisterPage"
+             xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
+             xmlns:viewModels="using:Messager.ViewModels"
+             NavigationPage.BackButtonTitle="Back">
+    <Shell.BackgroundColor>#512BD4</Shell.BackgroundColor>
+
+    <ContentPage.BindingContext>
+        <viewModels:RegisterViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.2*" />
+            <RowDefinition />
+            <RowDefinition />
+
+        </Grid.RowDefinitions>
+        <StackLayout>
+            <Frame
+                BackgroundColor="Transparent "
+                CornerRadius="30"
+
+                Margin="30"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+                <Image
+                    Source="login_image.svg"
+                    HeightRequest="185"
+                    Aspect="AspectFit" />
+            </Frame>
+            <Label Text="REGISTER" TextColor="#512BD4" FontSize="20" VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center" />
+        </StackLayout>
+
+        <StackLayout Grid.Row="1" Orientation="Vertical">
+
+            <Frame Margin="10,25,10,0" BorderColor="#512BD4" HorizontalOptions="FillAndExpand" CornerRadius="30"
+                   Padding="0">
+                <StackLayout Orientation="Horizontal">
+                    <Frame BorderColor="#512BD4" Padding="0" WidthRequest="40"
+                           HeightRequest="40" CornerRadius="30" Margin="5">
+                        <Image Source="user.svg" MaximumWidthRequest="30" MaximumHeightRequest="30" Aspect="AspectFit"
+                               HorizontalOptions="Fill" />
+                    </Frame>
+
+                    <Entry Text="{Binding LoginId}" FontSize="25" Placeholder="Login" VerticalOptions="Center"
+                           HorizontalOptions="FillAndExpand" Margin="0,0,30,0" />
+                </StackLayout>
+            </Frame>
+
+
+            <Frame Margin="10,25,10,0" BorderColor="#512BD4" HorizontalOptions="Fill" CornerRadius="30" Padding="0">
+                <StackLayout Orientation="Horizontal">
+                    <Frame BorderColor="#512BD4" Padding="0" WidthRequest="40"
+                           HeightRequest="40" CornerRadius="30" Margin="5">
+                        <Image Source="password.svg" MaximumWidthRequest="30" MaximumHeightRequest="30"
+                               Aspect="AspectFit"
+                               HorizontalOptions="FillAndExpand" />
+                    </Frame>
+
+                    <Entry Text="{Binding Password}" FontSize="25" IsPassword="True" Placeholder="Password"
+                           VerticalOptions="Center"
+                           HorizontalOptions="FillAndExpand" Margin="0,0,30,0" />
+                </StackLayout>
+            </Frame>
+
+
+            <Frame Margin="10,25,10,0" BorderColor="#512BD4" HorizontalOptions="FillAndExpand" CornerRadius="30"
+                   Padding="0">
+                <StackLayout Orientation="Horizontal">
+                    <Frame BorderColor="#512BD4" Padding="0" WidthRequest="40"
+                           HeightRequest="40" CornerRadius="30" Margin="5">
+                        <Image Source="username_image.svg" MaximumWidthRequest="30" MaximumHeightRequest="30" Aspect="AspectFit"
+                               HorizontalOptions="Fill" />
+                    </Frame>
+
+                    <Entry Text="{Binding UserName}" FontSize="25" Placeholder="User name" VerticalOptions="Center"
+                           HorizontalOptions="FillAndExpand" Margin="0,0,30,0" />
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+
+        <mdc:Button Grid.Row="2" Command="{Binding RegisterCommand}" Margin="15" FontSize="30"
+                    HorizontalOptions="FillAndExpand" VerticalOptions="Center" Text="Register"
+                    Style="{DynamicResource FilledButtonStyle}" />
+
+
+    </Grid>
+</ContentPage>

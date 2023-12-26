@@ -3,28 +3,37 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Messager.Pages.LoginPage"
              xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
-             Title="LoginPage">
+             xmlns:viewModels="using:Messager.ViewModels">
+
+    <ContentPage.BindingContext>
+        <viewModels:LoginViewModel/>
+    </ContentPage.BindingContext>
 
     <Grid>
+       
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
 
         </Grid.RowDefinitions>
-        <Frame
-         BackgroundColor="Transparent " 
-         CornerRadius="30"
-         
-         Margin="30"
-         HorizontalOptions="FillAndExpand"
-         VerticalOptions="FillAndExpand">
-            <Image 
-             Source="login_image.svg"
-             HeightRequest="185"
-             Aspect="AspectFit"
-             SemanticProperties.Description="dot net bot in a race car number eight" />
-        </Frame>
+
+        <ActivityIndicator Grid.Row="1" WidthRequest="60" HeightRequest="60" IsRunning="{Binding IsBusy  }"/>
+        <StackLayout>
+            <Frame
+             BackgroundColor="Transparent " 
+             CornerRadius="30"
+             
+             Margin="30"
+             HorizontalOptions="FillAndExpand"
+             VerticalOptions="FillAndExpand">
+                <Image 
+                 Source="login_image.svg"
+                 HeightRequest="185"
+                 Aspect="AspectFit"/>
+            </Frame>
+            <Label Text="LOGIN" TextColor="#512BD4" FontSize="20"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+        </StackLayout>
 
         <StackLayout Grid.Row="1" Orientation="Vertical">
 
@@ -39,6 +48,7 @@
                     <Entry  Text="{Binding UserName}" FontSize="25" Placeholder="Login" VerticalOptions="Center" HorizontalOptions="FillAndExpand" Margin="0,0,30,0" />
                 </StackLayout>
             </Frame>
+           
 
             <Frame Margin="10,25,10,0"  BorderColor="#512BD4" HorizontalOptions="Fill" CornerRadius="30" Padding="0" >
                 <StackLayout Orientation="Horizontal">
@@ -62,7 +72,11 @@
 
         <StackLayout Grid.Row="2">
             <mdc:Button Command="{Binding LoginCommand}"  Margin="15" FontSize="30" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" Text="Login" Style="{DynamicResource FilledButtonStyle}" />
-            <Label Margin="20,0,0,0" Text="Sign Up" TextColor="Green" FontAttributes="Bold" FontSize="Small"/>
+            <Label Margin="20,0,0,0" Text="Sign Up" TextColor="Green" FontAttributes="Bold" FontSize="Small">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RegisterCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
         </StackLayout>
 
     </Grid>

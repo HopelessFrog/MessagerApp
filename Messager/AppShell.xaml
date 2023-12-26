@@ -10,6 +10,10 @@
 
     <ShellContent
         ContentTemplate="{DataTemplate pages:LoginPage}"
-        Route="MainPage" />
+        Route="LoginPage" />
+
+    <FlyoutItem Route="LoginPage/RegisterPage">
+        <ShellContent ContentTemplate="{DataTemplate pages:RegisterPage}"/>
+    </FlyoutItem>
 
 </Shell>

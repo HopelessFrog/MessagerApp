@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Messager.Models
+namespace Messager.Services.Register
 {
-    public class UserInfo
+    public  class RegisterRequest
     {
-        public int Id { get; set; }
-        public string Login { get; set; }
+        public string UserName { get; set; }
+        public string LoginId { get; set; }
         public string Password { get; set; }
     }
 }
