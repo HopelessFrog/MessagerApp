@@ -8,6 +8,8 @@ namespace Messager
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(LoginPage)+"/" + nameof(RegisterPage), typeof(RegisterPage));
+            Routing.RegisterRoute(nameof(LoginPage) + "/" + nameof(Settings), typeof(Settings));
+
             Routing.RegisterRoute("ListChatPage", typeof(ListChatPage));
             Routing.RegisterRoute("ChatPage", typeof(ChatPage));
 

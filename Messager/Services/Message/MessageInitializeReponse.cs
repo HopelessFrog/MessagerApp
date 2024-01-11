@@ -7,7 +7,7 @@ using Messager.Models;
 
 namespace Messager.Services.Message
 {
-    class MessageInitializeReponse : BaseResponse
+    public class MessageInitializeReponse : BaseResponse
     {
         public User FriendInfo { get; set; }
         public IEnumerable<Models.Message> Messages { get; set; }

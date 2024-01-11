@@ -4,13 +4,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Messager.Pages.RegisterPage"
              xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
-             xmlns:viewModels="using:Messager.ViewModels"
              NavigationPage.BackButtonTitle="Back">
     <Shell.BackgroundColor>#512BD4</Shell.BackgroundColor>
 
-    <ContentPage.BindingContext>
-        <viewModels:RegisterViewModel/>
-    </ContentPage.BindingContext>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -27,18 +23,28 @@
                 Margin="30"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand">
-                <Image
-                    Source="login_image.svg"
-                    HeightRequest="185"
-                    Aspect="AspectFit" />
+                <VerticalStackLayout>
+                    <Image
+                        Source="login_image.svg"
+                        HeightRequest="185"
+                        Aspect="AspectFit" />
+                </VerticalStackLayout>
             </Frame>
             <Label Text="REGISTER" TextColor="#512BD4" FontSize="20" VerticalTextAlignment="Center"
                    HorizontalTextAlignment="Center" />
         </StackLayout>
 
         <StackLayout Grid.Row="1" Orientation="Vertical">
+            <Frame HorizontalOptions="Center" BorderColor="#512BD4" CornerRadius="20">
+                <VerticalStackLayout>
+                    <Image HeightRequest="100" WidthRequest="100" Source="{Binding AvatarSource}" />
 
-            <Frame Margin="10,25,10,0" BorderColor="#512BD4" HorizontalOptions="FillAndExpand" CornerRadius="30"
+                </VerticalStackLayout>
+            </Frame>
+            <mdc:Button Command="{Binding SetAvatarCommand}" Margin="5" Style="{DynamicResource FilledButtonStyle}"
+                        Text="Set Avatar" />
+
+            <Frame Margin="10,10,10,0" BorderColor="#512BD4" HorizontalOptions="FillAndExpand" CornerRadius="30"
                    Padding="0">
                 <StackLayout Orientation="Horizontal">
                     <Frame BorderColor="#512BD4" Padding="0" WidthRequest="40"
@@ -74,7 +80,8 @@
                 <StackLayout Orientation="Horizontal">
                     <Frame BorderColor="#512BD4" Padding="0" WidthRequest="40"
                            HeightRequest="40" CornerRadius="30" Margin="5">
-                        <Image Source="username_image.svg" MaximumWidthRequest="30" MaximumHeightRequest="30" Aspect="AspectFit"
+                        <Image Source="username_image.svg" MaximumWidthRequest="30" MaximumHeightRequest="30"
+                               Aspect="AspectFit"
                                HorizontalOptions="Fill" />
                     </Frame>
 
@@ -85,7 +92,7 @@
         </StackLayout>
 
         <mdc:Button Grid.Row="2" Command="{Binding RegisterCommand}" Margin="15" FontSize="30"
-                    HorizontalOptions="FillAndExpand" VerticalOptions="Center" Text="Register"
+                    HorizontalOptions="FillAndExpand" VerticalOptions="End" Text="Register"
                     Style="{DynamicResource FilledButtonStyle}" />
 
 

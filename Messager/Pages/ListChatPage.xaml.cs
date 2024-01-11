@@ -9,8 +9,16 @@ public partial class ListChatPage : ContentPage
 		InitializeComponent();
         this.BindingContext = viewModel;
     }
-
+    protected override bool OnBackButtonPressed()
+    {
+        return true;
+    }
     private void ContentPage_NavigatedTo(object sender, NavigatedToEventArgs e)
+    {
+        var qwe = 123;
+    }
+
+    private void ListChatPage_OnAppearing(object? sender, EventArgs e)
     {
         (this.BindingContext as ListChatViewModel).Initialize();
     }

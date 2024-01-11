@@ -1,204 +1,239 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Messager.Pages.ListChatPage"
-             xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"
              xmlns:viewModels="using:Messager.ViewModels"
-             xmlns:helper="using:Messager.Helpers"
              Title="ListChatPage"
+             Appearing="ListChatPage_OnAppearing"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Background="#FFF"
              NavigatedTo="ContentPage_NavigatedTo">
 
-   
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter" />
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-    <RefreshView Margin="10" IsRefreshing="{Binding IsRefreshing}">
-        <Grid RowSpacing="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="55" />
-                <RowDefinition Height="45" />
-                <RowDefinition Height="90" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+    <Grid>
+        <RefreshView Margin="10" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <Grid RowSpacing="10" IsVisible="{Binding IsRefreshing, Converter={StaticResource InvertedBoolConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="55" />
+                    <RowDefinition Height="45" />
+                    <RowDefinition Height="90" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
-            <Grid>
-                <StackLayout Orientation="Horizontal">
-                    <Border Padding="0" Margin="0" Stroke="#512BD4" >
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20" />
-                        </Border.StrokeShape>
-                        <Image
-                        HeightRequest="45"
-                        Source="user.svg"
-                        VerticalOptions="Center"
-                        WidthRequest="45" />
-                    </Border>
-                    <Label
-                        Margin="10,0,0,0"
-                        FontAttributes="Bold"
-                        FontSize="20"
-                        Text="{Binding UserInfo.UserName}"
-                        VerticalOptions="Center" />
-                </StackLayout>
-            </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="50" />
+                    </Grid.ColumnDefinitions>
+                    <StackLayout Orientation="Horizontal" Padding="0" Margin="0">
+                        <Border Padding="0" Margin="0" Stroke="#512BD4">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="190" />
+                            </Border.StrokeShape>
+                            <Image
+                                HeightRequest="45"
 
-            <Grid Grid.Row="1">
-                <Frame
-                    Padding="0"
-                    BackgroundColor="#512BD4"
-                    BorderColor="Transparent"
-                    CornerRadius=" 45">
+                                Source="{Binding UserInfo.AvatarSource, Mode=TwoWay, Converter={StaticResource ByteArrayToImageSourceConverter}}"
 
-                    <StackLayout
-                        HeightRequest="48"
-                        Orientation="Horizontal"
-                        VerticalOptions="Center">
-
-                        <Entry
+                                VerticalOptions="Center"
+                                WidthRequest="45" />
+                        </Border>
+                        <Label
                             Margin="10,0,0,0"
-                            Placeholder="Search" 
-                            TextColor="Gray"
+                            FontAttributes="Bold"
+                            FontSize="20"
+                            Text="{Binding UserInfo.UserName}"
                             VerticalOptions="Center" />
                     </StackLayout>
-                </Frame>
-            </Grid>
+                    <ImageButton
+                        Margin="0,0,0,10"
+                        Grid.Column="1"
+                        BackgroundColor="#fff"
+                        Command="{Binding LogOutCommand}"
+                        CornerRadius="20"
+                        HeightRequest="40"
+                        WidthRequest="40"
+                        Source="log_out.svg" />
+                </Grid>
 
-            <Grid Grid.Row="2">
+                <Grid Grid.Row="1">
+                    <Frame
+                        Padding="0"
+                        BackgroundColor="#512BD4"
+                        BorderColor="Transparent"
+                        CornerRadius=" 45">
+                        <VerticalStackLayout>
 
-                <CollectionView
-                    Margin="10,0,0,0"
-                    ItemsSource="{Binding UserFriends}">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
+
+                            <Entry
+                                Margin="10,0,10,0"
+                                Placeholder="Search"
+                                TextColor="Gray"
+                                VerticalOptions="Center" />
+                        </VerticalStackLayout>
+
+                    </Frame>
+                </Grid>
+
+                <Grid Grid.Row="2">
+
+                    <CollectionView
+                        Margin="10,0,0,0"
+                        ItemsSource="{Binding UserFriends}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Stroke="#512BD4">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20" />
+                                    </Border.StrokeShape>
+                                    <VerticalStackLayout>
+
+                                        <Grid HeightRequest="54" WidthRequest="58">
+                                            <Image
+                                                HeightRequest="54"
+                                                HorizontalOptions="Start"
+                                                Source="{Binding AvatarSource, Mode=OneWay, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                                                WidthRequest="54">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Path=OpenChatPageCommand, Source={RelativeSource AncestorType={x:Type viewModels:ListChatViewModel}}}"
+                                                        CommandParameter="{Binding Id}" />
+                                                </Image.GestureRecognizers>
+                                            </Image>
+                                            <Ellipse
+                                                Fill="Green"
+                                                HeightRequest="18"
+                                                HorizontalOptions="End"
+                                                IsVisible="{Binding IsOnline}"
+                                                Stroke="#152c39"
+                                                StrokeThickness="3"
+                                                VerticalOptions="End"
+                                                WidthRequest="18" />
+                                            <Frame
+                                                Padding="5,0,5,0"
+                                                BackgroundColor="SkyBlue"
+                                                BorderColor="#512BD4"
+                                                CornerRadius="10"
+                                                HeightRequest="12"
+                                                HorizontalOptions="End"
+                                                IsVisible="{Binding IsAway}"
+                                                VerticalOptions="End">
+                                                <VerticalStackLayout>
+                                                    <Label
+                                                        FontSize="10"
+                                                        HorizontalOptions="Center"
+                                                        Text="{Binding AwayDuration}"
+                                                        TextColor="Black"
+                                                        VerticalOptions="Center" />
+                                                </VerticalStackLayout>
+                                            </Frame>
+                                        </Grid>
+                                        <Label
+                                            Margin="0,5,0,0"
+                                            FontSize="12"
+                                            HorizontalOptions="Center"
+                                            HorizontalTextAlignment="Center"
+                                            Text="{Binding UserName}" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+
+                <ListView
+                    Grid.Row="3"
+                    ItemsSource="{Binding LastestMessages}"
+                    RowHeight="64"
+                    SeparatorVisibility="None"
+                    VerticalScrollBarVisibility="Never">
+                    <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Border Stroke="#512BD4">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="20" />
-                                </Border.StrokeShape>
-                                <VerticalStackLayout >
-                              
-                                <Grid HeightRequest="54" WidthRequest="58">
-                                    <Image
-                                        HeightRequest="54"
-                                        HorizontalOptions="Start"
-                                        Source="user.svg"
-                                        WidthRequest="54">
-                                        <Image.GestureRecognizers>
-                                            <TapGestureRecognizer  Command="{Binding Path=OpenChatPageCommand, Source={RelativeSource AncestorType={x:Type viewModels:ListChatViewModel}}}" CommandParameter="{Binding Id}"   />
-                                        </Image.GestureRecognizers>
-                                    </Image>
-                                    <Ellipse
-                                        Fill="Green"
-                                        HeightRequest="18"
-                                        HorizontalOptions="End"
-                                        IsVisible="{Binding IsOnline}"
-                                        Stroke="#152c39"
-                                        StrokeThickness="3"
-                                        VerticalOptions="End"
-                                        WidthRequest="18" />
-                                    <Frame
-                                        Padding="5,0,5,0"
-                                        BackgroundColor="SkyBlue"
-                                        BorderColor="#512BD4"
-                                        CornerRadius="10"
-                                        HeightRequest="12"
-                                        HorizontalOptions="End"
-                                        IsVisible="{Binding IsAway}"
-                                        VerticalOptions="End">
-                                        <Label
-                                            FontSize="10"
-                                            HorizontalOptions="Center"
-                                            Text="{Binding AwayDuration}"
-                                            TextColor="Black"
-                                            VerticalOptions="Center" />
-                                    </Frame>
-                                </Grid>
-                                <Label
-                                    Margin="0,5,0,0"
-                                    FontSize="12"
-                                    HorizontalOptions="Center"
-                                    HorizontalTextAlignment="Center"
-                                    Text="{Binding UserName}" />
-                            </VerticalStackLayout>
-                            </Border>
+
+                            <ViewCell>
+                                <Border Stroke="#512BD4">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20" />
+                                    </Border.StrokeShape>
+                                    <HorizontalStackLayout Background="#FFF">
+                                        <HorizontalStackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Path=OpenChatPageCommand, Source={RelativeSource AncestorType={x:Type viewModels:ListChatViewModel}}}"
+                                                CommandParameter="{Binding UserFriendInfo.Id}" />
+                                        </HorizontalStackLayout.GestureRecognizers>
+                                        <Grid HeightRequest="54" WidthRequest="58">
+                                            <Image
+                                                HeightRequest="54"
+                                                HorizontalOptions="Start"
+                                                Source="{Binding UserFriendInfo.AvatarSource, Mode=OneWay, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+
+                                                WidthRequest="54" />
+                                            <Ellipse
+                                                Fill="Green"
+                                                HeightRequest="18"
+                                                HorizontalOptions="End"
+                                                IsVisible="{Binding UserFriendInfo.IsOnline}"
+                                                Stroke="#512BD4"
+                                                StrokeThickness="3"
+                                                VerticalOptions="End"
+                                                WidthRequest="18" />
+                                            <Frame
+                                                Padding="5,0,5,0"
+                                                BackgroundColor="#512BD4"
+                                                BorderColor="#512BD4"
+                                                CornerRadius="10"
+                                                HeightRequest="12"
+                                                HorizontalOptions="End"
+                                                IsVisible="{Binding UserFriendInfo.IsAway}"
+                                                VerticalOptions="End">
+                                                <VerticalStackLayout>
+                                                    <Label
+                                                        FontSize="10"
+                                                        HorizontalOptions="Center"
+                                                        Text="{Binding UserFriendInfo.AwayDuration}"
+                                                        TextColor="Black"
+                                                        VerticalOptions="Center" />
+                                                </VerticalStackLayout>
+                                            </Frame>
+                                        </Grid>
+
+                                        <StackLayout
+                                            Margin="10,5,0,0"
+                                            HorizontalOptions="Start"
+                                            VerticalOptions="Center">
+                                            <Label
+                                                FontSize="17"
+                                                HorizontalOptions="Start"
+                                                HorizontalTextAlignment="Start"
+                                                Text="{Binding UserFriendInfo.UserName}"
+                                                VerticalOptions="Center" />
+
+                                            <Label
+                                                FontSize="12"
+                                                HorizontalOptions="Center"
+                                                HorizontalTextAlignment="Start"
+                                                Text="{Binding Content}"
+                                                VerticalOptions="Center" />
+
+                                        </StackLayout>
+                                    </HorizontalStackLayout>
+                                </Border>
+                            </ViewCell>
                         </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
 
-            <ListView
-                Grid.Row="3"
-                ItemsSource="{Binding LastestMessages}"
-                RowHeight="64"
-                SeparatorVisibility="None"
-                VerticalScrollBarVisibility="Never">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <HorizontalStackLayout Background="SkyBlue">
-                                <HorizontalStackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer  Command="{Binding Path=OpenChatPageCommand, Source={RelativeSource AncestorType={x:Type viewModels:ListChatViewModel}}}" CommandParameter="{Binding Id}" />
-                                </HorizontalStackLayout.GestureRecognizers>
-                                <Grid HeightRequest="54" WidthRequest="58">
-                                    <Image
-                                        HeightRequest="54"
-                                        HorizontalOptions="Start"
-                                        Source="{Binding UserFriendInfo.AvatarSourceName}"
-                                        WidthRequest="54" />
-                                    <Ellipse
-                                        Fill="Green"
-                                        HeightRequest="18"
-                                        HorizontalOptions="End"
-                                        IsVisible="{Binding UserFriendInfo.IsOnline}"
-                                        Stroke="#512BD4"
-                                        StrokeThickness="3"
-                                        VerticalOptions="End"
-                                        WidthRequest="18" />
-                                    <Frame
-                                        Padding="5,0,5,0"
-                                        BackgroundColor="#512BD4"
-                                        BorderColor="#512BD4"
-                                        CornerRadius="10"
-                                        HeightRequest="12"
-                                        HorizontalOptions="End"
-                                        IsVisible="{Binding UserFriendInfo.IsAway}"
-                                        VerticalOptions="End">
-                                        <Label
-                                            FontSize="10"
-                                            HorizontalOptions="Center"
-                                            Text="{Binding UserFriendInfo.AwayDuration}"
-                                            TextColor="Black"
-                                            VerticalOptions="Center" />
-                                    </Frame>
-                                </Grid>
-
-                                <StackLayout
-                                    Margin="10,5,0,0"
-                                    HorizontalOptions="Start"
-                                    VerticalOptions="Center">
-                                    <Label
-                                        FontSize="17"
-                                        HorizontalOptions="Start"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding UserFriendInfo.UserName}"
-                                        VerticalOptions="Center" />
-
-                                    <Label
-                                        FontSize="12"
-                                        HorizontalOptions="Center"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding Content}"
-                                        VerticalOptions="Center" />
-
-                                </StackLayout>
-                            </HorizontalStackLayout>
-
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
-
-    </RefreshView>
+        </RefreshView>
+    </Grid>
 </ContentPage>

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Crypt;
 using Messager.Models;
 using Messager.Services;
 using Messager.Services.ChatHub;
@@ -31,12 +32,12 @@ namespace Messager.ViewModels
 
 
        
-        public ListChatViewModel(ChatHub chatHub)
+        public ListChatViewModel(ChatHub chatHub, ServiceProvider serviceProvider)
         {
             UserInfo = new User();
             UserFriends = new ObservableCollection<User>();
             LastestMessages = new ObservableCollection<LastestMessage>();
-            _serviceProvider = ServiceProvider.GetInstance();
+            _serviceProvider = serviceProvider;
             _chatHub = chatHub;
 
             _chatHub.Connect();
@@ -48,14 +49,25 @@ namespace Messager.ViewModels
         }
 
         [RelayCommand]
+        public  async void LogOut()
+        {
+            UserInfo = new User();
+            UserFriends = new ObservableCollection<User>();
+            LastestMessages = new ObservableCollection<LastestMessage>();
+            await Shell.Current.GoToAsync("..", true);
+
+
+        }
+        [RelayCommand]
         public async Task Refresh()
         {
             Task.Run(async() =>
             {
                 IsRefreshing = true;
                 await GetListFriends();
-            }).GetAwaiter().OnCompleted(() =>
+            }).GetAwaiter().OnCompleted( async () =>
             {
+                await Task.Delay(500);
                 IsRefreshing = false;
             });
            
@@ -64,7 +76,7 @@ namespace Messager.ViewModels
         [RelayCommand]
         public async Task OpenChatPage(int param)
         {
-            await Shell.Current.GoToAsync($"ChatPage?fromUserId={UserInfo.Id}&toUserId={param}");
+            await Shell.Current.GoToAsync($"ChatPage?fromUserId={UserInfo.Id}&toUserId={param}", true);
 
         }
 
@@ -76,10 +88,18 @@ namespace Messager.ViewModels
             if (response.StatusCode == 200)
             {
                 UserInfo = response.User;
-                UserInfo.AvatarSourceName = $"https://94.19.228.225:6666/ListChat/Image?userId={UserInfo.Id}";
+
+
+                var tempMesaage = response.LastestMessages.ToList();
+                for (int i = 0; i < tempMesaage.Count; i++)
+                {
+                    tempMesaage[i].Content = Crypter.Decrypt(tempMesaage[i].Content,
+                        tempMesaage[i].UserId + tempMesaage[i].UserFriendInfo.Id);
+                }
 
                 UserFriends = new ObservableCollection<User>(response.UserFriends);
-                LastestMessages = new ObservableCollection<LastestMessage>(response.LastestMessages);
+                LastestMessages = new ObservableCollection<LastestMessage>(tempMesaage);
+                
             }
             else
             {
@@ -87,14 +107,18 @@ namespace Messager.ViewModels
             }
         }
 
+       
+
         public async void Initialize()
         {
             Task.Run(async () =>
             {
                 IsRefreshing = true;
                 await GetListFriends();
-            }).GetAwaiter().OnCompleted(() =>
+            }).GetAwaiter().OnCompleted(async () =>
             {
+                await Task.Delay(500);
+
                 IsRefreshing = false;
             });
         }
@@ -112,10 +136,12 @@ namespace Messager.ViewModels
             if (lastestMessage != null)
                 lastestMessages.Remove(lastestMessage);
 
+            Crypter.Decrypt("qwe", 3);
+
             var newLastestMessage = new LastestMessage
             {
                 UserId = UserInfo.Id,
-                Content = message,
+                Content = Crypter.Decrypt(message, UserInfo.Id + fromUserId),
                 UserFriendInfo = UserFriends.Where(x => x.Id == fromUserId).FirstOrDefault()
             };
 

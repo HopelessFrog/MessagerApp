@@ -6,6 +6,8 @@
     xmlns:local="clr-namespace:Messager"
     xmlns:pages="using:Messager.Pages"
     Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False"
     Title="Messager">
 
     <ShellContent

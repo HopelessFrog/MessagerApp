@@ -1,80 +1,97 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Messager.Pages.LoginPage"
-             xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
-             xmlns:viewModels="using:Messager.ViewModels">
+             xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui">
 
-    <ContentPage.BindingContext>
-        <viewModels:LoginViewModel/>
-    </ContentPage.BindingContext>
 
     <Grid>
-       
+
+
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
 
         </Grid.RowDefinitions>
+        <ImageButton Grid.Row="3"
+            Margin="0,0,0,10"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            BackgroundColor="#D3D0C9"
+            Command="{Binding SettingsCommand}"
+            CornerRadius="20"
+            HeightRequest="40"
+            WidthRequest="40"
+            Source ="settings.svg"/>
 
-        <ActivityIndicator Grid.Row="1" WidthRequest="60" HeightRequest="60" IsRunning="{Binding IsBusy  }"/>
+        <ActivityIndicator Grid.Row="1" WidthRequest="60" HeightRequest="60" IsRunning="{Binding IsBusy  }" />
         <StackLayout>
             <Frame
-             BackgroundColor="Transparent " 
-             CornerRadius="30"
-             
-             Margin="30"
-             HorizontalOptions="FillAndExpand"
-             VerticalOptions="FillAndExpand">
-                <Image 
-                 Source="login_image.svg"
-                 HeightRequest="185"
-                 Aspect="AspectFit"/>
+                BackgroundColor="Transparent "
+                CornerRadius="30"
+
+                Margin="30"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+                <VerticalStackLayout>
+                    <Image
+                        Source="login_image.svg"
+                        HeightRequest="185"
+                        Aspect="AspectFit" />
+                </VerticalStackLayout>
             </Frame>
-            <Label Text="LOGIN" TextColor="#512BD4" FontSize="20"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Text="LOGIN" TextColor="#512BD4" FontSize="20" VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center" />
         </StackLayout>
 
         <StackLayout Grid.Row="1" Orientation="Vertical">
 
-            <Frame Margin="10,25,10,0"   BorderColor="#512BD4" HorizontalOptions="FillAndExpand" CornerRadius="30" Padding="0">
+            <Frame Margin="10,25,10,0" BorderColor="#512BD4" HorizontalOptions="FillAndExpand" CornerRadius="30"
+                   Padding="0">
                 <StackLayout Orientation="Horizontal">
-                    <Frame BorderColor="#512BD4"  Padding="0" WidthRequest="40"
-                        HeightRequest="40" CornerRadius="30" Margin="5">
+                    <Frame BorderColor="#512BD4" Padding="0" WidthRequest="40"
+                           HeightRequest="40" CornerRadius="30" Margin="5">
                         <Image Source="user.svg" MaximumWidthRequest="30" MaximumHeightRequest="30" Aspect="AspectFit"
-                            HorizontalOptions="Fill" />
+                               HorizontalOptions="Fill" />
                     </Frame>
 
-                    <Entry  Text="{Binding UserName}" FontSize="25" Placeholder="Login" VerticalOptions="Center" HorizontalOptions="FillAndExpand" Margin="0,0,30,0" />
+                    <Entry Text="{Binding UserName}" FontSize="25" Placeholder="Login" VerticalOptions="Center"
+                           HorizontalOptions="FillAndExpand" Margin="0,0,30,0" />
                 </StackLayout>
             </Frame>
-           
 
-            <Frame Margin="10,25,10,0"  BorderColor="#512BD4" HorizontalOptions="Fill" CornerRadius="30" Padding="0" >
+
+            <Frame Margin="10,25,10,0" BorderColor="#512BD4" HorizontalOptions="Fill" CornerRadius="30" Padding="0">
                 <StackLayout Orientation="Horizontal">
-                    <Frame BorderColor="#512BD4"  Padding="0" WidthRequest="40"
-                        HeightRequest="40" CornerRadius="30" Margin="5">
-                        <Image Source="password.svg" MaximumWidthRequest="30" MaximumHeightRequest="30" Aspect="AspectFit"
-                            HorizontalOptions="FillAndExpand" />
+                    <Frame BorderColor="#512BD4" Padding="0" WidthRequest="40"
+                           HeightRequest="40" CornerRadius="30" Margin="5">
+                        <Image Source="password.svg" MaximumWidthRequest="30" MaximumHeightRequest="30"
+                               Aspect="AspectFit"
+                               HorizontalOptions="FillAndExpand" />
                     </Frame>
 
-                    <Entry Text="{Binding Password}" FontSize="25" IsPassword="True" Placeholder="Password" VerticalOptions="Center"
-                        HorizontalOptions="FillAndExpand" Margin="0,0,30,0"/>
+                    <Entry Text="{Binding Password}" FontSize="25" IsPassword="True" Placeholder="Password"
+                           VerticalOptions="Center"
+                           HorizontalOptions="FillAndExpand" Margin="0,0,30,0" />
                 </StackLayout>
             </Frame>
             <StackLayout Orientation="Horizontal" Margin="10" Padding="0">
-                <mdc:Switch IsSelected="False"/>
-                <Label Text="Remember me " FontSize="Small"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                <mdc:Switch IsSelected="False" />
+                <Label Text="Remember me " FontSize="Small" VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center" />
             </StackLayout>
 
 
         </StackLayout>
 
         <StackLayout Grid.Row="2">
-            <mdc:Button Command="{Binding LoginCommand}"  Margin="15" FontSize="30" HorizontalOptions="FillAndExpand"  VerticalOptions="Center" Text="Login" Style="{DynamicResource FilledButtonStyle}" />
+            <mdc:Button Command="{Binding LoginCommand}" Margin="15" FontSize="30" HorizontalOptions="FillAndExpand"
+                        VerticalOptions="Center" Text="Login" Style="{DynamicResource FilledButtonStyle}" />
             <Label Margin="20,0,0,0" Text="Sign Up" TextColor="Green" FontAttributes="Bold" FontSize="Small">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding RegisterCommand}"/>
+                    <TapGestureRecognizer Command="{Binding RegisterCommand}" />
                 </Label.GestureRecognizers>
             </Label>
         </StackLayout>

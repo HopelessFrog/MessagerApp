@@ -11,15 +11,16 @@ using Messager.Models;
 using Messager.Services.ChatHub;
 using Messager.Services.Message;
 using ServiceProvider = Messager.Services.ServiceProvider;
+using Crypt;
 
 namespace Messager.ViewModels
 {
     public partial class ChatViewModel : ObservableObject, IQueryAttributable
     {
-        public ChatViewModel(ChatHub chatHub)
+        public ChatViewModel(ChatHub chatHub , ServiceProvider serviceProvider)
         {
             Messages = new ObservableCollection<Message>();
-            _serviceProvider = ServiceProvider.GetInstance();
+            _serviceProvider = serviceProvider;
             _chatHub = chatHub;
             _chatHub.AddReceivedMessageHandler(OnReceiveMessage);
             _chatHub.Connect();
@@ -38,7 +39,16 @@ namespace Messager.ViewModels
         private ObservableCollection<Message> messages;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(NoRefreshing))]
         private bool isRefreshing;
+
+        public bool NoRefreshing
+        {
+            get
+            {
+                return !isRefreshing;
+            }
+        }
 
         [ObservableProperty]
         private string message;
@@ -56,9 +66,10 @@ namespace Messager.ViewModels
         {
             try
             {
+                _chatHub.Connect();
                 if (Message.Trim() != "")
                 {
-                    await _chatHub.SendMessageToUser(FromUserId, ToUserId, Message);
+                    await _chatHub.SendMessageToUser(FromUserId, ToUserId, Crypter.Encrypt(Message, FromUserId + ToUserId));
 
                     Messages.Add(new Models.Message
                     {
@@ -91,14 +102,21 @@ namespace Messager.ViewModels
             if (response.StatusCode == 200)
             {
                 FriendInfo = response.FriendInfo;
-                Messages = new ObservableCollection<Message>(response.Messages);
+                var tempMesaage = response.Messages.ToList();
+                for (int i = 0; i < tempMesaage.Count; i++)
+                {
+                    tempMesaage[i].Content = Crypter.Decrypt(tempMesaage[i].Content,
+                        tempMesaage[i].FromUserId + tempMesaage[i].ToUserId);
+                }
+
+                Messages = new ObservableCollection<Message>(tempMesaage);
             }
             else
             {
                 await AppShell.Current.DisplayAlert("ChatApp", response.StatusMessage, "OK");
             }
         }
-        public void Initialize()
+        public async Task Initialize()
         {
             Task.Run(async () =>
             {
@@ -114,7 +132,7 @@ namespace Messager.ViewModels
         {
             Messages.Add(new Models.Message
             {
-                Content = message,
+                Content = Crypter.Decrypt(message, ToUserId + FromUserId),
                 FromUserId = ToUserId,
                 ToUserId = FromUserId,
                 SendDateTime = DateTime.Now

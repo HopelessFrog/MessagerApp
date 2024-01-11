@@ -19,6 +19,13 @@ namespace Messager.ViewModels
     {
         
 
+        private ServiceProvider _serviceProvider;
+        public LoginViewModel(ServiceProvider serviceProvider)
+        {
+            isBusy = false;
+            _serviceProvider = serviceProvider;
+        }
+
         [ObservableProperty]
         private string userName;
 
@@ -46,11 +53,11 @@ namespace Messager.ViewModels
                     Password = password
                 };
                 isBusy = true;
-                var response = await ServiceProvider.GetInstance().Authenticate(request);
+                var response = await _serviceProvider.Authenticate(request);
                 isBusy = false;
                 if (response.StatusCode == 200)
                 {
-                    await Shell.Current.GoToAsync($"ListChatPage?userId={response.Id}"); 
+                    await Shell.Current.GoToAsync($"ListChatPage?userId={response.Id}", true); 
                 }
                 else
                 {
@@ -78,6 +85,14 @@ namespace Messager.ViewModels
                 App.Current.MainPage.ShowPopup(new NoInternetPopUp());
             }
            
+        }
+
+        [RelayCommand]
+        private async Task Settings()
+        {
+            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}/{nameof(Settings)}");
+
+
         }
     }
 }

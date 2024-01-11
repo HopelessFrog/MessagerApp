@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using System.Diagnostics;
+using Messager.Helpers;
+using Microsoft.AspNetCore.SignalR.Client;
 using ServiceProvider = Messager.Services.ServiceProvider;
 namespace Messager.Services.ChatHub;
 
@@ -8,13 +10,19 @@ public class ChatHub
     private readonly ServiceProvider _serviceProvider;
     private readonly List<Action<int, string>> onReceiveMessageHandler;
 
-    public ChatHub()
+    public ChatHub(ServiceProvider serviceProvider)
     {
-        _serviceProvider = ServiceProvider.GetInstance();
+        _serviceProvider = serviceProvider;
+        var devSslHelper = new DevHttpsConnectionHelper(sslPort: 6666);
+
 
         hubConnection = new HubConnectionBuilder()
-            .WithUrl("https://94.19.228.225:6666" + "/ChatHub",
-                options => { options.Headers.Add("ChatHubBearer", _serviceProvider._accessToken); }).Build();
+            .WithUrl(devSslHelper.DevServerRootUrl + "/ChatHub", options =>
+            {
+                options.Headers.Add("ChatHubBearer", _serviceProvider._accessToken);
+
+                options.HttpMessageHandlerFactory = m => devSslHelper.GetPlatformMessageHandler();
+            }).Build();
 
         onReceiveMessageHandler = new List<Action<int, string>>();
         hubConnection.On<int, string>("ReceiveMessage", OnReceiveMessage);
@@ -22,7 +30,20 @@ public class ChatHub
 
     public async Task Connect()
     {
-        await hubConnection.StartAsync();
+        try
+        {
+            Debug.Print("try connect ");
+            await hubConnection.StartAsync();
+            Debug.Print("connected");
+        }
+        catch (Exception e)
+        {
+
+            throw e;
+        }
+       
+        var qwe = hubConnection.State;
+        var www = hubConnection.State;
     }
 
     public async Task Disconnect()

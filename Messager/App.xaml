@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Messager"
              x:Class="Messager.App"
-             xmlns:mds="clr-namespace:Material.Components.Maui.Styles;assembly=Material.Components.Maui">
+             xmlns:mds="clr-namespace:Material.Components.Maui.Styles;assembly=Material.Components.Maui"
+             xmlns:converters="using:Messager.Converters">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -15,6 +16,8 @@
                 <!--or use seedColor
                 <mds:MaterialStyles Dark="DarkBlue" Light="Green" />-->
             </ResourceDictionary.MergedDictionaries>
+            <converters:FromUserIdToHorizontalOptionConverter x:Key="FromUserIdToHorizontalOptionConverter" />
+            <converters:FromUserIdToBackgroudColorConverter x:Key="FromUserIdToBackgroudColorConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

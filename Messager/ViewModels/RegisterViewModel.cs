@@ -1,23 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Messager.Helpers.ImageHelper;
 using Messager.Pages.PopUps;
 using Messager.Services.Authenticate;
 using Messager.Services.Register;
+using Microsoft.Maui.Platform;
 using ServiceProvider = Messager.Services.ServiceProvider;
 
 
 namespace Messager.ViewModels
 {
-    partial class RegisterViewModel : ObservableObject
+    public partial class RegisterViewModel : ObservableObject
     {
+
+        private ServiceProvider _serviceProvider;
+
+        public RegisterViewModel(ServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+            AvatarSource = ImageSource.FromFile("user.svg");
+            Assembly assembly = GetType().GetTypeInfo().Assembly;
+            using (Stream stream = assembly.GetManifestResourceStream("Messager.Resources.Images.dotnet_bot.png"))
+            {
+
+                sourceByte = new byte[stream.Length];
+                stream.Read(sourceByte, 0, sourceByte.Length);
+
+            }
+        }
+
         [ObservableProperty]
         private string userName;
+
+        [ObservableProperty]
+        private ImageSource avatarSource;
+
+        
+        private byte[] sourceByte;
+
+       
+     
+        
+
 
         [ObservableProperty]
         private string password;
@@ -28,6 +59,40 @@ namespace Messager.ViewModels
 
         [ObservableProperty]
         private bool isBusy;
+
+        [RelayCommand]
+        private async Task SetAvatar()
+        {
+            var img = await UploadImage.OpenMediaPickerAsync();
+            if (img != null)
+            {
+               
+                var imageFile = await UploadImage.Upload(img);
+
+                sourceByte = UploadImage.StringToByteBase64(imageFile.byteBase64);
+                AvatarSource = ImageSource.FromStream(() =>
+                    UploadImage.ByteArrayToStream(sourceByte));
+
+            }
+        }
+
+        private void ClearFields()
+        {
+            AvatarSource = ImageSource.FromFile("user.svg");
+            Assembly assembly = GetType().GetTypeInfo().Assembly;
+            using (Stream stream = assembly.GetManifestResourceStream("Messager.Resources.Images.dotnet_bot.png"))
+            {
+
+                sourceByte = new byte[stream.Length];
+                stream.Read(sourceByte, 0, sourceByte.Length);
+
+            }
+
+            Password = "";
+            LoginId = "";
+            UserName = "";
+
+        }
 
         [RelayCommand]
         private async Task Register()
@@ -44,14 +109,17 @@ namespace Messager.ViewModels
                 {
                     LoginId = loginId,
                     Password = password,
-                    UserName = userName
+                    UserName = userName,
+                    Avatar = Convert.ToBase64String(sourceByte)
                 };
                 isBusy = true;
-                var response = await ServiceProvider.GetInstance().Register(request);
+                var response = await _serviceProvider.Register(request);
                 isBusy = false;
                 if (response.StatusCode == 200)
                 {
                     await AppShell.Current.DisplayAlert("", response.StatusMessage, "OK");
+                    await Shell.Current.GoToAsync("..", true);
+                    ClearFields();
                 }
                 else
                 {
